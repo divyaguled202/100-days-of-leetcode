@@ -1,0 +1,93 @@
+/**
+ * @param {ListNode[]} lists
+ * @return {ListNode}
+ */
+var mergeKLists = function(lists) {
+    if (!lists || lists.length === 0) return null;
+
+    // Min Heap
+    class MinHeap {
+        constructor() {
+            this.heap = [];
+        }
+
+        push(node) {
+            this.heap.push(node);
+            this.up();
+        }
+
+        pop() {
+            if (this.heap.length === 0) return null;
+            if (this.heap.length === 1) return this.heap.pop();
+
+            const top = this.heap[0];
+            this.heap[0] = this.heap.pop();
+            this.down();
+            return top;
+        }
+
+        size() {
+            return this.heap.length;
+        }
+
+        up() {
+            let i = this.heap.length - 1;
+
+            while (i > 0) {
+                let p = Math.floor((i - 1) / 2);
+
+                if (this.heap[p].val <= this.heap[i].val) break;
+
+                [this.heap[p], this.heap[i]] = [this.heap[i], this.heap[p]];
+                i = p;
+            }
+        }
+
+        down() {
+            let i = 0;
+
+            while (true) {
+                let left = 2 * i + 1;
+                let right = 2 * i + 2;
+                let smallest = i;
+
+                if (left < this.size() && this.heap[left].val < this.heap[smallest].val) {
+                    smallest = left;
+                }
+
+                if (right < this.size() && this.heap[right].val < this.heap[smallest].val) {
+                    smallest = right;
+                }
+
+                if (smallest === i) break;
+
+                [this.heap[i], this.heap[smallest]] = [this.heap[smallest], this.heap[i]];
+                i = smallest;
+            }
+        }
+    }
+
+    const heap = new MinHeap();
+
+    
+    for (let node of lists) {
+        if (node) heap.push(node);
+    }
+
+    let dummy = new ListNode(0);
+    let current = dummy;
+
+    while (heap.size() > 0) {
+        let node = heap.pop();
+
+        current.next = node;
+        current = current.next;
+
+        if (node.next) {
+            heap.push(node.next);
+        }
+    }
+
+    return dummy.next;
+
+};
