@@ -1,0 +1,38 @@
+/**
+ * @param {ListNode} head
+ * @param {number} k
+ * @return {ListNode}
+ */
+var reverseKGroup = function(head, k) {
+    let curr = head;
+    let count = 0;
+
+    while (curr && count < k) {
+        curr = curr.next;
+        count++;
+    }
+
+    if (count === k) {
+        let prev = null;
+        let curr = head;
+        let next = null;
+        let i = 0;
+
+      
+        while (i < k) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+            i++;
+        }
+
+       
+        head.next = reverseKGroup(curr, k);
+
+        
+        return prev;
+    }
+
+    return head;
+};
