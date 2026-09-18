@@ -1,0 +1,63 @@
+/**
+ * @param {string} s
+ * @param {string[]} words
+ * @return {number[]}
+ */
+var findSubstring = function(s, words) {
+     if (!s || words.length === 0) return [];
+
+    const wordLength = words[0].length;
+    const wordCount = words.length;
+    const totalLength = wordLength * wordCount;
+
+    const wordMap = {};
+    
+
+    for (let word of words) {
+        wordMap[word] = (wordMap[word] || 0) + 1;
+    }
+
+    const result = [];
+
+
+    for (let i = 0; i < wordLength; i++) {
+
+        let left = i;
+        let right = i;
+        let seenMap = {};
+        let count = 0;
+
+        while (right + wordLength <= s.length) {
+
+            const word = s.substring(right, right + wordLength);
+            right += wordLength;
+
+            if (wordMap[word]) {
+
+                seenMap[word] = (seenMap[word] || 0) + 1;
+                count++;
+
+               
+                while (seenMap[word] > wordMap[word]) {
+                    const leftWord = s.substring(left, left + wordLength);
+                    seenMap[leftWord]--;
+                    left += wordLength;
+                    count--;
+                }
+
+             
+                if (count === wordCount) {
+                    result.push(left);
+                }
+
+            } else {
+                
+                seenMap = {};
+                count = 0;
+                left = right;
+            }
+        }
+    }
+
+    return result;
+};
