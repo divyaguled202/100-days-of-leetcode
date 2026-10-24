@@ -1,0 +1,55 @@
+/**
+ * @param {number} n
+ * @return {string[][]}
+ */
+var solveNQueens = function(n) {
+     const result = [];
+
+    const board = Array.from({ length: n }, () =>
+        Array(n).fill(".")
+    );
+
+    const columns = new Set();
+    const positiveDiag = new Set(); 
+    const negativeDiag = new Set(); 
+    function backtrack(row) {
+       
+        if (row === n) {
+            result.push(board.map(r => r.join("")));
+            return;
+        }
+
+        for (let col = 0; col < n; col++) {
+
+            
+            if (
+                columns.has(col) ||
+                positiveDiag.has(row + col) ||
+                negativeDiag.has(row - col)
+            ) {
+                continue;
+            }
+
+            
+            board[row][col] = "Q";
+
+            columns.add(col);
+            positiveDiag.add(row + col);
+            negativeDiag.add(row - col);
+
+           
+            backtrack(row + 1);
+
+           
+            board[row][col] = ".";
+
+            columns.delete(col);
+            positiveDiag.delete(row + col);
+            negativeDiag.delete(row - col);
+        }
+    }
+
+    backtrack(0);
+
+    return result;
+};
