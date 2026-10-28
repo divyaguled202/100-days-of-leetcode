@@ -1,0 +1,36 @@
+/**
+ * @param {number} n
+ * @param {number} k
+ * @return {string}
+ */
+var getPermutation = function(n, k) {
+    let numbers = [];
+    let factorial = 1;
+
+    for (let i = 1; i <= n; i++) {
+        numbers.push(i);
+        if (i < n) {
+            factorial *= i;
+        }
+    }
+
+
+    k--;
+
+    let result = "";
+
+    while (numbers.length > 0) {
+        let index = Math.floor(k / factorial);
+
+        result += numbers[index];
+        numbers.splice(index, 1);
+
+        k %= factorial;
+
+        if (numbers.length > 0) {
+            factorial = Math.floor(factorial / numbers.length);
+        }
+    }
+
+    return result;
+};
